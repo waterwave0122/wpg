@@ -2,31 +2,24 @@ name: Source mirror
 
 on:
   workflow_dispatch:
-    inputs:
-      git-ref:
-        description: Git Ref (Optional)
-        required: false
-
   schedule:
-    - cron: '30 14 * * *'
+    - cron: '20 12 * * *'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      COMMIT_MESSAGE: Update
-      COMMIT_AUTHOR: Continuous Integration
     steps:
       - uses: actions/checkout@v3
-
-      # Commit and push all changed files.
-      - name: Update
-        run: |
+      - name: Fetch latest data
+        run: |-
           wget --no-verbose ${{ secrets.SOURCE_FULL }} -O guide.xml
-          git config --global user.name "${{ env.COMMIT_AUTHOR }}"
-          git config --global user.email "username@users.noreply.github.com"
-          git add .
-          git commit -m "${{ env.COMMIT_MESSAGE }}"
+      - name: Commit and push if it changed
+        run: |-
+          git config user.name "Automated"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          timestamp=$(date -u)
+          git commit -m "Latest data: ${timestamp}" || exit 0
           git push
