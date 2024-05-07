@@ -16,8 +16,8 @@ jobs:
       - name: Check if running is enabled
         if: ${{ env.is_enabled == '' }}
         run: |-
-          'echo "Running is not enabled, script will terminate"'
-           exit 0
+          echo "Running is not enabled, script will terminate"
+          exit 0
       - uses: actions/checkout@v4
       - name: Fetch latest data
         run: |-
