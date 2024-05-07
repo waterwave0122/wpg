@@ -33,6 +33,7 @@ jobs:
       - name: Fetch latest data
         run: |-
           wget --no-verbose ${{ secrets.SOURCE_FULL }} -O guide.xml
+          wget --no-verbose ${{ secrets.SOURCE_DIGI }} -O guide_digi.xml
       - name: Commit and push if it changed
         run: |-
           git config user.name "Automated"
