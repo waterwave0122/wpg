@@ -10,8 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env: 
+      is_enabled: ${{ secrets.IS_ENABLED }} 
     steps:
-      - uses: actions/checkout@v3
+      - name: Check if running is enabled
+        if: ${{ env.is_enabled == '' }}
+        run: |-
+          'echo "Running is not enabled, script will terminate"'
+           exit 0
+      - uses: actions/checkout@v4
       - name: Fetch latest data
         run: |-
           wget --no-verbose ${{ secrets.SOURCE_FULL }} -O guide.xml
